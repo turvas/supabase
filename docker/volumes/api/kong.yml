@@ -34,6 +34,36 @@ basicauth_credentials:
 ### API Routes
 ###
 services:
+  ## FastApi
+  - name: fastapi-service-openapi
+    _comment: 'to get openapi json'
+    url: http://10.10.10.171:8001/
+    routes:
+      - name: fastapi-route-openapi
+        strip_path: true
+        paths:
+          - /fastapi/v1/spec/
+    plugins:
+      - name: cors
+      - name: key-auth
+        config:
+          hide_credentials: true
+      - name: acl
+        config:
+          hide_groups_header: true
+          allow:
+            - admin
+            - anon
+
+  - name: fastapi-service
+    url: http://10.10.10.171:8001/
+    routes:
+      - name: fastapi-route
+        strip_path: true
+        paths:
+          - /fastapi/v1/
+    plugins:
+      - name: cors
   ## Open Auth routes
   - name: auth-v1-open
     url: http://auth:9999/verify

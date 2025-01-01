@@ -75,6 +75,14 @@ services:
       # https://github.com/supabase/supabase/issues/12661
       - ./volumes/api/kong.yml:/home/kong/temp.yml:ro
 
+  swagger-postgrest:
+    container_name: supabase-postgrest-swagger
+    ports: 
+      - 8080:8080
+    environment: 
+      SWAGGER_JSON_URL: "http://kong:8000/rest/v1/?apikey=$ANON_KEY"
+    image: swaggerapi/swagger-ui
+
   auth:
     container_name: supabase-auth
     image: supabase/gotrue:v2.158.1
@@ -457,7 +465,7 @@ services:
       - /app/bin/migrate && /app/bin/supavisor eval "$$(cat /etc/pooler/pooler.exs)" && /app/bin/server
     restart: unless-stopped
     ports:
-      - ${POSTGRES_PORT}:5432
+      #- ${POSTGRES_PORT}:5432
       - ${POOLER_PROXY_PORT_TRANSACTION}:6543
     environment:
       - PORT=4000
