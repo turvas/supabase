@@ -64,6 +64,33 @@ services:
           - /fastapi/v1/
     plugins:
       - name: cors
+
+  - name: fastapi-service-oidc-callback
+    url: http://10.10.10.171:8001/api/v1/apiconnectors/oidc
+    routes:
+      - name: fastapi-route-callback
+        strip_path: true
+        paths:
+          - /callback/api/v1/apiconnectors/oidc
+    plugins:
+#      - name: request-transformer
+#        config:
+#          replace:
+#            uri: "/api/v1/apiconnectors/oidc"
+#      - name: proxy-rewrite
+#        config:
+        # The regex_uri parameter accepts a two-element array:
+        # [ "pattern to match", "replacement" ]
+        # This example removes the '/api/v1' prefix.
+#          regex_uri:
+#            - '^/callback/v1/(.*)$'
+#            - '$1'
+      - name: key-auth
+        enabled: false  # Disables authentication
+#      - name: jwt
+#        enabled: false  # Disables JWT auth
+      - name: cors
+
   ## Open Auth routes
   - name: auth-v1-open
     url: http://auth:9999/verify
