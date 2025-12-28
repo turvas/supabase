@@ -422,6 +422,22 @@ services:
     volumes:
       - ./volumes/pooler/pooler.exs:/etc/pooler/pooler.exs:ro
 
+  mosquitto:
+    container_name: mosquitto
+    image: iegomez/mosquitto-go-auth:latest
+    ports:
+      - 1883:1883
+      # - 8883:8883
+    #networks:
+    #  - nrg-net
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/config:/etc/mosquitto
+        # cert material from SWAG container letsencrypt certbot
+      #- /opt/webapps/swag/config/etc/letsencrypt:/mosquitto/config/certs
+      - ./volumes/mosquitto/log:/var/log
+    restart: unless-stopped
+
 volumes:
   db-config:
   pgadmin:

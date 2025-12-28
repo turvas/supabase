@@ -207,7 +207,8 @@ services:
       RLIMIT_NOFILE: "10000"
       APP_NAME: realtime
       SEED_SELF_HOST: true
-
+      SLOT_NAME_SUFFIX: _dev
+      TEMPORARY_SLOT: true
 
   meta:
     container_name: supabase-meta
@@ -221,5 +222,27 @@ services:
       PG_META_DB_USER: supabase_admin
       PG_META_DB_PASSWORD: ${POSTGRES_PASSWORD}
 
+  vector:
+    command:
+      - --config
+      - etc/vector/vector.yml
+    container_name: supabase-vector
+    environment:
+      LOGFLARE_API_KEY: ${LOGFLARE_API_KEY}
+    healthcheck:
+      interval: 5s
+      retries: 3
+      test:
+        - CMD
+        - wget
+        - --no-verbose
+        - --tries=1
+        - --spider
+        - http://vector:9001/health
+      timeout: 5s
+    image: timberio/vector:0.28.1-alpine
+    volumes:
+      - ./volumes/logs/vector.yml:/etc/vector/vector.yml:ro
+      - ${DOCKER_SOCKET_LOCATION}:/var/run/docker.sock:ro
 
 #volumes:
