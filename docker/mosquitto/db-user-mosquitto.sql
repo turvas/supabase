@@ -22,3 +22,7 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO mosquitto_re
 CREATE USER mosquitto WITH PASSWORD 'securepa55';
 -- grant read access to USER mosquitto, user must exist before that..
 GRANT mosquitto_read TO mosquitto;
+
+-- update RLS for supabaser
+CREATE POLICY mosquitto_can_read_password_hash
+ON public.users FOR SELECT TO mosquitto USING (true);
